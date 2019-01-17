@@ -1,0 +1,13 @@
+title: CheckPaymentStatusRequest
+required:
+  - transactionId
+  - status
+type: object
+properties:
+  transactionId:
+    type: string
+  status:
+    type: string
+example:
+  transactionId: transaction54353
+  status: success

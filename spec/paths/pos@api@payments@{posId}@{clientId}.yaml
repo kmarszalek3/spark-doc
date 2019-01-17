@@ -1,0 +1,108 @@
+post:
+  tags:
+    - POS API
+  summary: Check Payment Status
+  description: Celem jest poinformowanie kasy o statusie wykonanej płatności.
+  operationId: CheckPaymentStatus
+  parameters:
+    - name: posId
+      in: path
+      description: identyfikator kasy
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 5678
+    - name: clientId
+      in: path
+      description: identyfikator klienta
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 1234
+    - name: Content-Type
+      in: header
+      description: ''
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: application/json
+  requestBody:
+    description: ''
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CheckPaymentStatusRequest'
+        example: '{"transactionId":"transaction54353","status":"success"}'
+    required: true
+  responses:
+    '200':
+      description: ''
+      headers:
+        Connection:
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: keep-alive
+        Date:
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: 'Thu, 20 Sep 2018 19:31:17 GMT'
+        access-control-allow-credentials:
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: true
+        access-control-expose-headers:
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: >-
+                WWW-Authenticate,Server-Authorization,access-control-allow-headers,Access-Control-Allow-Origin,
+                Access-Control-Allow-Methods, Access-Control-Allow-Headers,
+                Origin, X-Requested-With, Content-Type, CORRELATION_ID
+        cache-control:
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: no-cache
+        content-length:
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: 14
+        content-type:
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: application/json; charset=utf-8
+        vary:
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: origin
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Success'
+          example:
+            status: OK
+  x-operation-settings:
+    CollectParameters: false
+    AllowDynamicQueryParameters: false
+    AllowDynamicFormParameters: false
+    IsMultiContentStreaming: false

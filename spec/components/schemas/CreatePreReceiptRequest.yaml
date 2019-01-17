@@ -1,0 +1,45 @@
+title: CreatePreReceiptRequest
+required:
+  - posId
+  - clientId
+  - transactionId
+  - datetime
+  - amount
+  - products
+type: object
+properties:
+  posId:
+    type: string
+  clientId:
+    type: string
+  transactionId:
+    type: string
+  datetime:
+    type: string
+  amount:
+    type: integer
+    format: int32
+  products:
+    type: array
+    items:
+      $ref: '#/components/schemas/Product'
+    description: ''
+example:
+  posId: pos5678
+  clientId: client1234
+  transactionId: transaction43543
+  datetime: 1235323434
+  amount: 7197
+  products:
+    - id: 0
+      name: ProductA
+      amount: 1
+      price: 599
+    - id: 1
+      name: ProductB
+      amount: 1
+      price: 3699
+    - id: 2
+      name: ProductC
+      amount: 1
+      price: 2899

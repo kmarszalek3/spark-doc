@@ -1,0 +1,20 @@
+openapi: 3.0.0
+info:
+  title: PD API Documentation
+  description: >
+    Integracja systemu centralnego Platformy Detalistów z systemami kasowymi
+    detalistów
+  contact: {}
+  version: '1.0'
+servers:
+  - url: 'http://example.com'
+    variables: {}
+tags:
+  - name: Authorization
+    description: >-
+      Autoryzacja pomiędzy system centralnym Platformy Detalistów z systemem
+      kasowym detalistów oparta o OAuth 2.0 w trybie Client Credentials.
+  - name: POS API
+    description: Usługi udostępniane przez system kasowy
+  - name: PD API
+    description: Usługi udostępnione przez Platformę Detalistów

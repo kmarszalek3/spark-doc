@@ -1,0 +1,1454 @@
+openapi: 3.0.0
+info:
+  title: PD API Documentation
+  description: >
+    Integracja systemu centralnego Platformy Detalistów z systemami kasowymi detalistów
+  contact: {}
+  version: '1.0'
+servers:
+- url: http://example.com
+  variables: {}
+paths:
+  /api/auth:
+    post:
+      tags:
+      - Authorization
+      summary: Obtain authorization code
+      description: 'TODO: Add Description'
+      operationId: ObtainAuthorizationCode
+      parameters:
+      - name: grant_type
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: client_credentials
+      - name: client_id
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: ns4fQc14Zg4hKFCNaSzArVuwszX95X
+      - name: client_secret
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: ZIjFyTsNgQNyxI
+      - name: scope
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: customer, data-prereceipt, data-ereceipt
+      responses:
+        200:
+          description: ''
+          headers:
+            Location:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pobraniekodudostepu'
+              example:
+                accessToken: bnM0ZlFjMTRaZzRoS0ZDTmFTekFyVnV3c3pYOTVYOlpJakZ5VHNOZ1FOeXhJOg==
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  /pos/api/identification/{posId}:
+    put:
+      tags:
+      - POS API
+      summary: Customer Identification
+      description: Celem jest przekazanie kasie informacji identyfikacyjnych klienta („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).
+      operationId: CustomerIdentification
+      parameters:
+      - name: posId
+        in: path
+        description: identyfikator kasy
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 5678
+      - name: Content-Type
+        in: header
+        description: ''
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: application/json
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerIdentificationRequest'
+            example: '{"clientId":"1234","isAppPaymentAvailable":"true","clientLoyaltyId":"987"}'
+        required: true
+      responses:
+        200:
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi'
+              example:
+                clientLoyaltyId: 987
+                clientLoyaltyStatus: ok
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  /pos/api/payments/{posId}/{clientId}:
+    post:
+      tags:
+      - POS API
+      summary: Check Payment Status
+      description: Celem jest poinformowanie kasy o statusie wykonanej płatności.
+      operationId: CheckPaymentStatus
+      parameters:
+      - name: posId
+        in: path
+        description: identyfikator kasy
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 5678
+      - name: clientId
+        in: path
+        description: identyfikator klienta
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 1234
+      - name: Content-Type
+        in: header
+        description: ''
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: application/json
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckPaymentStatusRequest'
+            example: '{"transactionId":"transaction54353","status":"success"}'
+        required: true
+      responses:
+        200:
+          description: ''
+          headers:
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Thu, 20 Sep 2018 19:31:17 GMT
+            access-control-allow-credentials:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: true
+            access-control-expose-headers:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: WWW-Authenticate,Server-Authorization,access-control-allow-headers,Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, CORRELATION_ID
+            cache-control:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: no-cache
+            content-length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: 14
+            content-type:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: application/json; charset=utf-8
+            vary:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: origin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+              example:
+                status: OK
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  /pd/api/identification/{posId}:
+    post:
+      tags:
+      - PD API
+      summary: Customer Identification
+      description: >-
+        *Wariant pasywny. System kasowy tylko pobiera informacje.*
+
+
+        <p>Celem jest udostępnienie informacji identyfikacyjnych klienta („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).</p>
+      operationId: CustomerIdentification1
+      parameters:
+      - name: posId
+        in: path
+        description: identyfikator kasy
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 5678
+      - name: Content-Type
+        in: header
+        description: ''
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: application/json
+      responses:
+        200:
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi1'
+              example:
+                clientId: 1234
+                isAppPaymentAvailable: true
+                clientLoyaltyId: 987
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  /pd/api/prereceipt/{posId}/{clientId}:
+    post:
+      tags:
+      - PD API
+      summary: Create PreReceipt
+      description: >-
+        Celem jest otrzymanie informacji o transakcji, wyświetlenie ich konsumentowi w formie pre-paragonu do przeprowadzenia płatności (jeśli płatność odbywa się poprzez aplikację mobilną konsumenta).
+
+
+        Transfer informacji na trigger z kasy (zamknij paragon lub płatność aplikacją).
+      operationId: CreatePrereceipt
+      parameters:
+      - name: posId
+        in: path
+        description: identyfikator kasy
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 5678
+      - name: clientId
+        in: path
+        description: identyfikator klienta
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 1234
+      - name: Content-Type
+        in: header
+        description: ''
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: application/json
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePreReceiptRequest'
+            example: '{"posId":"pos5678","clientId":"client1234","transactionId":"transaction43543","datetime":"1235323434","amount":7197,"products":[{"id":"0","name":"ProductA","amount":1,"price":599},{"id":"1","name":"ProductB","amount":1,"price":3699},{"id":"2","name":"ProductC","amount":1,"price":2899}]}'
+        required: true
+      responses:
+        200:
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pobraniedanychdotransakcjipre-paragon'
+              example:
+                status: OK
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  /pd/api/payments/{posId}/{clientId}:
+    post:
+      tags:
+      - PD API
+      summary: Check Payment Status PASSIVE
+      description: >-
+        *Wariant pasywny. System kasowy tylko pobiera informacje.*
+
+        <p>Celem jest pobranie informacji o statusie wykonanej płatności.</p>
+      operationId: CheckPaymentStatusPassive
+      parameters:
+      - name: posId
+        in: path
+        description: identyfikator kasy
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 5678
+      - name: clientId
+        in: path
+        description: identyfikator klienta
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 1234
+      - name: Content-Type
+        in: header
+        description: ''
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: application/json
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckPaymentStatusPASSIVERequest'
+            example: '{"transactionId":"transaction54353"}'
+        required: true
+      responses:
+        200:
+          description: ''
+          headers:
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Thu, 20 Sep 2018 19:31:17 GMT
+            access-control-allow-credentials:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: true
+            access-control-expose-headers:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: WWW-Authenticate,Server-Authorization,access-control-allow-headers,Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, CORRELATION_ID
+            cache-control:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: no-cache
+            content-length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: 14
+            content-type:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: application/json; charset=utf-8
+            vary:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: origin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+              example:
+                status: success
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  /pd/api/ereceipt/{posId}/{clientId}:
+    post:
+      tags:
+      - PD API
+      summary: Create eReceipt
+      description: >-
+        Celem jest otrzymanie kompletu danych do stworzenia i przekazania eParagonu konsumentowi
+
+
+        | Obiekt                        | Opis |
+
+        |-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+        | graphic                       | Jeśli puste, zakłada się że paragon nie posiada grafiki do wyświetlenia. W przeciwnym wypadku należy umieścić uzgodniony identyfikator uprzednio dostarczonej grafiki. Jeśli niepuste, ale brak uzgodnionego identyfikatora - paragon zawierać będzie ostatnią dostępną grafikę. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/grafika |
+
+        | taxPayerName                  | Nazwa podatnikaPole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/nazwaPod                                                                                                                                                                                                                                                                                         |
+
+        | street                        | Nazwa ulicy podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika). <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                        |
+
+        | number                        | Numer budynku podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika). <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                      |
+
+        | apartment                     | Numer lokalu podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika), o ile dostępne. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                      |
+
+        | postalCode                    | Kod pocztowy podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika). <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                       |
+
+        | postCity                      | Poczta odpowiednia dla kodu pocztowego podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika), o ile jest różna od miasta podatnika. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                      |
+
+        | city                          | Miasto podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika). <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                             |
+
+        | regionOrState                 | Wojeweództwo lub stan podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika), np.,"Mazowieckie".                                                                                                                                                                                                                                                                      |
+
+        | country                       | Kod kraju podatnika, zgody z normą ISO_3166-1 alpha 2 (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika)                                                                                                                                                                                                                                                                    |
+
+        | contactLine1                  | Dane kontaktowe do lokalizacji / podatnika: Telefon, Fax, E-mail, Strona internetowa - tekst nieustrukturyzowany (o ile dostępne)                                                                                                                                                                                                                                                                                                                   |
+
+        | contactLine2                  | Dane kontaktowe do lokalizacji / podatnika: Telefon, Fax, E-mail, Strona internetowa - tekst nieustrukturyzowany - linia nr 2 (o ile dostępne)                                                                                                                                                                                                                                                                                                      |
+
+        | locationName                  | Nazwa własna lokalizacji (np. nazwa centrum handlowego w którym ulokowany jest sklep)                                                                                                                                                                                                                                                                                                                                                               |
+
+        | locationId                    | Identyfikator (ID) lokalizacji, zgody z wewnętrzymi bazami detalisty                                                                                                                                                                                                                                                                                                                                                                                |
+
+        | street                        | Nazwa ulicy dla punktu sprzedaży. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                                                                                                                                        |
+
+        | number                        | Numer budynku dla punktu sprzedaży. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                                                                                                                                      |
+
+        | apartment                     | Numer lokalu dla punktu sprzedaży. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                                                                                                                                       |
+
+        | postalCode                    | Kod pocztowy dla punktu sprzedaży. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                                                                                                                                       |
+
+        | postCity                      | Poczta odpowiednia dla kodu pocztowego podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika), o ile jest różna od miasta podatnika. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                      |
+
+        | city                          | Miejscowość punktu sprzedaży. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/adresPod                                                                                                                                                                                                                                                                            |
+
+        | regionOrState                 | Wojeweództwo lub stan podatnika (jeśli występuje lub dla sprzedaży prowadzonej w miejscach niestałych – adres siedziby lub miejsca zamieszkania podatnika), np.,"Mazowieckie".                                                                                                                                                                                                                                                                      |
+
+        | country                       | Kod kraju miejsca sprzedaży, zgody z normą ISO_3166-1 alpha 2, o ile dostępny                                                                                                                                                                                                                                                                                                                                                                       |
+
+        | contactLine1                  | Dane kontaktowe do punktu sprzedaży: telefon, faks, e-mail, strona www - dane nieustrukturyzowane - linia 1 - o ile występuja                                                                                                                                                                                                                                                                                                                       |
+
+        | contactLine2                  | Dane kontaktowe do punktu sprzedaży: telefon, faks, e-mail, strona www - dane nieustrukturyzowane - linia 2 - o ile występuja                                                                                                                                                                                                                                                                                                                       |
+
+        | TIN                           | NIP detalisty. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/NIP                                                                                                                                                                                                                                                                                                |
+
+        | recyclingDB                   | Numer detalisty w bazie danych o produktach i opakowaniach oraz o gospodarce odpadami (BDO, jeśli dostępny i umieszczony na fizycznym paragonie                                                                                                                                                                                                                                                                                                     |
+
+        | nextDocumentID                | Kolejny numer dokumentu. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/nrDok                                                                                                                                                                                                                                                            |
+
+        | currency                      | Waluta ewidencyjna kasy, zgoda z ISO-4217. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podsum/properties/waluta                                                                                                                                                                                                                       |
+
+        | productOrServiceName          | Nazwa towaru/usługi. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/nazwa                                                                                                                                                                                                                      |
+
+        | EAN                           | Kod EAN, o ile dostępny w systemie                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+        | ID                            | Wewnętrzne systemowe ID produktu merchanta, o ile różne od kodu EAN, które może być następnie identyfikatorem w zapytaniach o dodatkowe dane na temat produktu w innych systemach detalisty                                                                                                                                                                                                                                                         |
+
+        | isIdOnReceipt                 | Czy wewnętrzne systemowe ID jest widoczne dla klienta na paragonie. Puste pole = Nie, w przeciwnym wypadku (niepuste pole) = Tak.                                                                                                                                                                                                                                                                                                                   |
+
+        | quantity                      | Ilość towaru lub usługi. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/ilosc                                                                                                                                                                                                                  |
+
+        | unitOfMeasurement             | Jednostka miary, o ile występuje. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/jm                                                                                                                                                                                                            |
+
+        | unitPrice                     | Cena jednostkowa. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/cena                                                                                                                                                                                                                          |
+
+        | totalLineValue                | Wartość sumaryczna. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/brutto                                                                                                                                                                                                                      |
+
+        | taxRate                       | Oznaczenie literowe stawki podatku, ew. zwolnienie od podatku. Powinno odpowiadać kodom z taxRates. Przykładowo "A". <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/idStPtu                                                                                                                   |
+
+        | additionalDescription         | Opis towaru lub usługi, mogący zawierać elementy tekstowe, kody kreskowe, kody dwuwymiarowe, o ile występuje. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/opis                                                                                                                             |
+
+        | subtotal                      | informację o wartości opłaty po uwzględnieniu zniżek i refundacji, o ile występuje (dotyczy kas w aptekach). <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/oplata                                                                                                                             |
+
+        | isStorno                      | Czy linia jest storno. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/oper                                                                                                                                                                                                                     |
+
+        | type                          | Oznaczenie (OPUST | NARZUT | OBNIŻKA | RABAT) jeśli linia zawiera zniżki lub narzuty. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/rabat/properties/opis                                                                                                                                     |
+
+        | value                         | Wartość opustu, narzutu lub obniżki, o ile dotyczy. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/rabat/properties/nazwa                                                                                                                                                                      |
+
+        | name                          | Nazwa opustu, narzutu lub obniżki, o ile dotyczy. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/rabat/properties/wart                                                                                                                                                                         |
+
+        | taxRate                       | Oznaczenie stawki podatku, której dotyczy opust, narzut lub obniżka, o ile dotyczy. Zgodne z taxRates. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/towar/properties/rabat/properties/wartWgPtu/anyOf/properties/idStPtu                                                                                      |
+
+        | markupsTotal                  | łączne wartości udzielonych opustów, narzutów lub obniżek. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podsum/properties/sumaOpust                                                                                                                                                                                                    |
+
+        | rebatesTotal                  | łączne wartości udzielonych opustów, narzutów lub obniżek. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podsum/properties/sumaOpust                                                                                                                                                                                                    |
+
+        | A                             | Stawka podatkowa, kod A, wyrażona w procentach (należy wpisać bez znaku ("%"). Na koniec 2018 wynosiła w Polsce 23%. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/stPtu                                                                                                                                                               |
+
+        | B                             | Stawka podatkowa, kod B, wyrażona w procentach (należy wpisać bez znaku ("%"). Na koniec 2018 wynosiła w Polsce 8%. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/stPtu                                                                                                                                                                |
+
+        | C                             | Stawka podatkowa, kod C, wyrażona w procentach (należy wpisać bez znaku ("%"). Na koniec 2018 wynosiła w Polsce 0%. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/stPtu                                                                                                                                                                |
+
+        | D5                            | Stawka podatkowa, kod D5, wyrażona w procentach (należy wpisać bez znaku ("%"). Na koniec 2018 wynosiła w Polsce 5%. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/stPtu                                                                                                                                                               |
+
+        | E                             | Stawka podatkowa, kod E, wyrażona w procentach (należy wpisać bez znaku ("%"). Na koniec 2018 w Polsce była nieokreślona. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/stPtu                                                                                                                                                          |
+
+        | F                             | Stawka podatkowa, kod F, wyrażona w procentach (należy wpisać bez znaku ("%"). Na koniec 2018 w Polsce była nieokreślona. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/stPtu                                                                                                                                                          |
+
+        | G                             | Stawka podatkowa, kod G, wyrażona w procentach (należy wpisać bez znaku ("%"). Na koniec 2018 w Polsce oznaczała "zwolniony" i taką wartość należy wpisać w polu. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/stPtu                                                                                                                  |
+
+        | subtotalsByTaxRate            | Podsumy wg stawek podatku, zgodnie z kolejnością stawek określoną w taxRates. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podsum/properties/sumaNetto/                                                                                                                                                                                |
+
+        | taxValue                      | Wartości i stawki podatku, zgodnie z kolejnością stawek określoną w taxRates. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podsum/properties/sumaNetto/                                                                                                                                                                               |
+
+        | taxTotalValue                 | Łączna kwota podatku. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podsum/properties/sumaPod                                                                                                                                                                                                                                           |
+
+        | taxExemptValue                | Łączna wartość sprzedaży niepodlegająca opodatkowaniu, o ile występują linie nie podlegające opodatkowaniu. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podsum/properties/sprzedNO                                                                                                                                                   |
+
+        | grossSaleValue                | Łączna wartość sprzedaży brutto. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podsum/properties/sumaBrutto                                                                                                                                                                                                                             |
+
+        | productOrServiceName          | Nazwa zwracanego opakowania towaru/usługi. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/opak/properties/daneOpak/nazwa                                                                                                                                                                                                                 |
+
+        | EAN                           | Kod EAN, o ile dostępny w systemie                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+        | ID                            | Wewnętrzne systemowe ID zwracanego opakowania, o ile różne od kodu EAN, które może być następnie identyfikatorem w zapytaniach o dodatkowe dane na temat produktu w innych systemach detalisty                                                                                                                                                                                                                                                      |
+
+        | quantity                      | Ilość towaru lub usługiPole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/opak/properties/daneOpak/ilosc                                                                                                                                                                                                                                   |
+
+        | price                         | Cena jednostkowaPole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/opak/properties/daneOpak/cena                                                                                                                                                                                                                                           |
+
+        | productOrServiceName          | Nazwa wydawanego opakowania towaru/usługiPole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/opak/properties/daneOpak/nazwa                                                                                                                                                                                                                 |
+
+        | EAN                           | Kod EAN, o ile dostępny w systemie                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+        | ID                            | Wewnętrzne systemowe ID wydawanego opakowania, o ile różne od kodu EAN, które może być następnie identyfikatorem w zapytaniach o dodatkowe dane na temat produktu w innych systemach detalisty                                                                                                                                                                                                                                                      |
+
+        | quantity                      | Ilość towaru lub usługi. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/opak/properties/daneOpak/ilosc                                                                                                                                                                                                                                   |
+
+        | price                         | Cena jednostkowa. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/opak/properties/daneOpak/cena                                                                                                                                                                                                                                           |
+
+        | totalPackagesValue            | Łączna wartość przyjętych i wydanych opakowań zwrotnych. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/opak/properties/wart                                                                                                                                                                                                             |
+
+        | description                   | Tekst "DO ZAPŁATY", "DO ZWROTU" lub "CENA", o ile na paragonie występują zwroty/wydania opakowań lub sprzedawano produkty farmaceutyczne (dot. aptek)                                                                                                                                                                                                                                                                                               |
+
+        | grossValueAfterDeductions     | Kwota należności, po odliczeniu kwot wynikających z wydań/zwrotów opakowań lub produktów farmaceutycznych. Kwota podawana warunkowo jeśli występowały te odliczenia. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/total/properties/zaplZwrot                                                                                          |
+
+        | nameOfPayment                 | Nazwa / przedmiot zaliczki, o ile zaliczka jest uwzględniona na paragonie. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/zal/properties/opis                                                                                                                                                                   |
+
+        | storno                        | Czy linia jest storno. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/zal/properties/oper/                                                                                                                                                                                                                      |
+
+        | value                         | Wartość zaliczki, o ile zaliczka jest na paragonie. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/zal/properties/wart                                                                                                                                                                                          |
+
+        | taxRate                       | Dla zaliczki - oznaczenie literowe stawki podatku lub zwolnienie. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/zal/properties/idStPtu                                                                                                                                                                         |
+
+        | requiredAdditionalPayment     | Suma do dopłaty po uwzględnieniu zaliczki. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/pozycja/items/properties/zal/properties/suma                                                                                                                                                                                                   |
+
+        | currency                      | Oznaczenie waluty, na którą następuje przeliczenie informacyjne. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/przelicz/items/properties/waluta                                                                                                                                                                                         |
+
+        | exchangeRate                  | Informacja o kursie waluty z dokładnością do 4 cyfr po przecinku w przeliczeniu informacyjnym. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/przelicz/items/properties/kurs                                                                                                                                                             |
+
+        | afterConversion               | Kwota po przeliczeniu na walutę ewidencyjną kasy. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/przelicz/items/properties/wart                                                                                                                                                                                                          |
+
+        | paymentForm                   | Typ formy płatności, np. „Gotówka”, „Karta”, „Waluta obca”, „Bon”, „Czek”, „Kredyt”, „Przelew”, „Voucher”, „Mobilna” lub inny. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/platnosc/items/properties/forma                                                                                                                            |
+
+        | paymentName                   | Nazwa formy płatności. Jeżeli płatność za pomocą niniejszego rozwiązania, należy pozostawić puste. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/platnosc/items/properties/nazwa                                                                                                                                                       |
+
+        | giftCardNo                    | Numery karty podarunkowych używanych do płatności                                                                                                                                                                                                                                                                                                                                                                                                   |
+
+        | giftCardValue                 | Stany kart podarunkowych po transakcji                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+        | currency                      | Oznaczenie waluty, zgodne z ISO-4217. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/platnosc/items/properties/waluta                                                                                                                                                                                                                    |
+
+        | exchangeRate                  | Przelicznik kursu walutowego z dokładnością do 4 cyfr po przecinku. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/platnosc/items/properties/kursWal                                                                                                                                                                                     |
+
+        | paidThisForm                  | Wartość wpłacona daną metodą                                                                                                                                                                                                                                                                                                                                                                                                                        |
+
+        | cashInOriginalValue           | Wskazanie wartości wpłacanej kwoty w walucie obcej. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/platnosc/items/properties/wartWaluty                                                                                                                                                                                                  |
+
+        | totalPaid                     | Wskazanie wartości wpłacanej kwoty, o ile po przeliczeniu przekracza ona wymaganą wartość wpłaty (tj. jeśli wymaga się wydania reszty). <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/platnosc/items/properties/wart                                                                                                                    |
+
+        | change                        | Reszta, o ile wydawano resztę. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/platnosc/items/properties/reszta                                                                                                                                                                                                                           |
+
+        | nextReceiptNumber             | numer kolejny paragonu. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/nrParag                                                                                                                                                                                                                                                           |
+
+        | cashRegisterID                | numer kasy. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/nrKasy                                                                                                                                                                                                                                                                        |
+
+        | cashierID                     | oznaczenie kasjera. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/kasjer                                                                                                                                                                                                                                                                |
+
+        | shiftID                       | Numer zmiany, o ile dostępny na paragonie                                                                                                                                                                                                                                                                                                                                                                                                           |
+
+        | consumerTIN                   | NIP nabywcy, o ile występuje. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/NIP                                                                                                                                                                                                                                                         |
+
+        | consumerLoyaltyNumber         | Numer karty lojalnościowej nabywcy, o ile występuje                                                                                                                                                                                                                                                                                                                                                                                                 |
+
+        | endTimePOSIX                  | Czas UTC w formacie POSIX (sekundy od 01/01/1970 00:00 UTC). <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/zakSprzed/                                                                                                                                                                                                                   |
+
+        | endTimeTimeZone               | Strefa czasowa - odchylenie od UTC, 5 znaków w formacie "+hhmm" lub "-hhmm". <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/zakSprzed/                                                                                                                                                                                                   |
+
+        | documentDigitalSignature      | Podpis cyfrowy dokumentu złożony przy wykorzystaniu klucza prywatnego kasy – drukowane jest tylko pierwsze 40 cyfr w kodzie szesnastkowym (20 bajtów). <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podpis/properties/RSA                                                                                                              |
+
+        | sha2                          | Skrót SHA2, wyliczany ze skrótu SHA2 poprzedniego dokumentu fiskalnego posiadającego skrót SHA2 i podpisu cyfrowego bieżącego dokumentu, który nie jest drukowany. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/content/items/properties/paragon/properties/podpis/properties/SHA                                                                                                  |
+
+        | digitalSignatureGraphicalCode | Informacja czy paragon zawierał kod graficzny podpisu cyfrowego. Jeśli nie - pozostawić puste (null) lub wpisać 0. Jeśli tak - podać jakąkolwiek inną wartość, w tym np. binarną reprezentację grafiki.                                                                                                                                                                                                                                             |
+
+        | orderID                       | ID zamówienia (jeśli może być powiązany z zamwieniem klienta i jest dostępny na paragonie)                                                                                                                                                                                                                                                                                                                                                          |
+
+        | uniqueCashRegisterID          | Numer unikatowy kasy. <br><br>Pole z definicji JPK (kasy online) zawierające zbliżony zakres informacyjny: #/definitions/TJPK_KASA/properties/podmiot1/properties/nrUnik                                                                                                                                                                                                                                                                                      |
+
+        | marketingContent              | Treść reklamowa i informacyjna definiowana przez detalistę                                                                                                                                                                                                                                                                                                                                                                                          |
+
+        | QRCode                        | Informacja czy paragon zawiera kod graficzny QR zgodny z normą ISO/IEC 18004:2015 oraz zakresem danych opisanych w stosownym rozporządzeniu. Jeśli nie - pozostawić puste (null) lub wpisać 0. Jeśli tak - podać jakąkolwiek inną wartość, w tym np. szensastkową reprezentację kodu QR.                                                                                                                                                            |
+      operationId: CreateEreceipt
+      parameters:
+      - name: posId
+        in: path
+        description: identyfikator kasy
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 5678
+      - name: clientId
+        in: path
+        description: identyfikator klienta
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: 1234
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateeReceiptRequest'
+        required: true
+      responses:
+        200:
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PobraniedanychdoeParagonu'
+              example:
+                status: OK
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+components:
+  schemas:
+    Pobraniekodudostepu:
+      title: Pobraniekodudostepu
+      required:
+      - accessToken
+      type: object
+      properties:
+        accessToken:
+          type: string
+      example:
+        accessToken: bnM0ZlFjMTRaZzRoS0ZDTmFTekFyVnV3c3pYOTVYOlpJakZ5VHNOZ1FOeXhJOg==
+    CustomerIdentificationRequest:
+      title: CustomerIdentificationRequest
+      required:
+      - clientId
+      - isAppPaymentAvailable
+      - clientLoyaltyId
+      type: object
+      properties:
+        clientId:
+          type: string
+        isAppPaymentAvailable:
+          type: string
+        clientLoyaltyId:
+          type: string
+      example:
+        clientId: 1234
+        isAppPaymentAvailable: true
+        clientLoyaltyId: 987
+    Identyfikacjaklientawpunkciesprzedazy/obslugi:
+      title: Identyfikacjaklientawpunkciesprzedazy/obslugi
+      required:
+      - clientLoyaltyId
+      - clientLoyaltyStatus
+      type: object
+      properties:
+        clientLoyaltyId:
+          type: string
+        clientLoyaltyStatus:
+          type: string
+      example:
+        clientLoyaltyId: 987
+        clientLoyaltyStatus: ok
+    CheckPaymentStatusRequest:
+      title: CheckPaymentStatusRequest
+      required:
+      - transactionId
+      - status
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+      example:
+        transactionId: transaction54353
+        status: success
+    Success:
+      title: Success
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+      example:
+        status: OK
+    Identyfikacjaklientawpunkciesprzedazy/obslugi1:
+      title: Identyfikacjaklientawpunkciesprzedazy/obslugi1
+      required:
+      - clientId
+      - isAppPaymentAvailable
+      - clientLoyaltyId
+      type: object
+      properties:
+        clientId:
+          type: string
+        isAppPaymentAvailable:
+          type: string
+        clientLoyaltyId:
+          type: string
+      example:
+        clientId: 1234
+        isAppPaymentAvailable: true
+        clientLoyaltyId: 987
+    CreatePreReceiptRequest:
+      title: CreatePreReceiptRequest
+      required:
+      - posId
+      - clientId
+      - transactionId
+      - datetime
+      - amount
+      - products
+      type: object
+      properties:
+        posId:
+          type: string
+        clientId:
+          type: string
+        transactionId:
+          type: string
+        datetime:
+          type: string
+        amount:
+          type: integer
+          format: int32
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+          description: ''
+      example:
+        posId: pos5678
+        clientId: client1234
+        transactionId: transaction43543
+        datetime: 1235323434
+        amount: 7197
+        products:
+        - id: 0
+          name: ProductA
+          amount: 1
+          price: 599
+        - id: 1
+          name: ProductB
+          amount: 1
+          price: 3699
+        - id: 2
+          name: ProductC
+          amount: 1
+          price: 2899
+    Product:
+      title: Product
+      required:
+      - id
+      - name
+      - amount
+      - price
+      type: object
+      properties:
+        id:
+          type: string
+          example: 0
+        name:
+          type: string
+          example: ProductA
+        amount:
+          type: integer
+          format: int32
+          example: 1
+        price:
+          type: integer
+          format: int32
+          example: 599
+    Pobraniedanychdotransakcjipre-paragon:
+      title: Pobraniedanychdotransakcjipre-paragon
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+      example:
+        status: OK
+    CheckPaymentStatusPASSIVERequest:
+      title: CheckPaymentStatusPASSIVERequest
+      required:
+      - transactionId
+      type: object
+      properties:
+        transactionId:
+          type: string
+      example:
+        transactionId: transaction54353
+    CreateeReceiptRequest:
+      title: CreateeReceiptRequest
+      required:
+      - posId
+      - clientId
+      - transactionId
+      - datetime
+      - eReceipt
+      type: object
+      properties:
+        posId:
+          type: string
+        clientId:
+          type: string
+        transactionId:
+          type: string
+        datetime:
+          type: string
+        eReceipt:
+          $ref: '#/components/schemas/EReceipt'
+    EReceipt:
+      title: EReceipt
+      required:
+      - metadata
+      - lines
+      - settlementAdvancePayment
+      - packageReturns
+      - returnPackagesIssued
+      - totalPackagesValue
+      - currencyExchange
+      - payment
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Line'
+          description: ''
+        settlementAdvancePayment:
+          type: array
+          items:
+            $ref: '#/components/schemas/SettlementAdvancePayment'
+          description: ''
+        packageReturns:
+          type: array
+          items:
+            $ref: '#/components/schemas/PackageReturn'
+          description: ''
+        returnPackagesIssued:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReturnPackagesIssued'
+          description: ''
+        totalPackagesValue:
+          type: number
+        currencyExchange:
+          $ref: '#/components/schemas/CurrencyExchange'
+        payment:
+          $ref: '#/components/schemas/Payment'
+    Metadata:
+      title: Metadata
+      required:
+      - graphic
+      - taxpayerName
+      - taxpayerAddress
+      - location
+      - TIN
+      - recyclingDB
+      - nextDocumentID
+      - currency
+      - markupsTotal
+      - rebatesTotal
+      - taxRates
+      - subtotalsByTaxRate
+      - taxValue
+      - taxTotalValue
+      - taxExemptValue
+      - grossSaleValue
+      - totalPackagesValue
+      - description
+      - grossValueAfterDecuctions
+      - nextReceiptNumber
+      - cashRegisterID
+      - cashierID
+      - shiftID
+      - consumerTIN
+      - consumerLoyaltyNumber
+      - endTimePOSIX
+      - endTimeTimeZone
+      - documentDigitalSignature
+      - sha2
+      - digitalSignatureGraphicalCode
+      - orderID
+      - uniqueCashRegisterID
+      - marketingContent
+      - QRCode
+      type: object
+      properties:
+        graphic:
+          type: integer
+          format: int32
+        taxpayerName:
+          type: string
+        taxpayerAddress:
+          $ref: '#/components/schemas/TaxpayerAddress'
+        location:
+          $ref: '#/components/schemas/Location'
+        TIN:
+          type: string
+        recyclingDB:
+          type: string
+        nextDocumentID:
+          type: string
+        currency:
+          type: string
+        markupsTotal:
+          type: number
+        rebatesTotal:
+          type: string
+          nullable: true
+        taxRates:
+          $ref: '#/components/schemas/TaxRates'
+        subtotalsByTaxRate:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: ''
+        taxValue:
+          type: array
+          items:
+            type: number
+          description: ''
+        taxTotalValue:
+          type: number
+        taxExemptValue:
+          type: integer
+          format: int32
+        grossSaleValue:
+          type: integer
+          format: int32
+        totalPackagesValue:
+          type: integer
+          format: int32
+        description:
+          type: string
+        grossValueAfterDecuctions:
+          type: integer
+          format: int32
+        nextReceiptNumber:
+          type: string
+        cashRegisterID:
+          type: string
+        cashierID:
+          type: string
+        shiftID:
+          type: string
+        consumerTIN:
+          type: string
+        consumerLoyaltyNumber:
+          type: string
+        endTimePOSIX:
+          type: integer
+          format: int32
+        endTimeTimeZone:
+          type: string
+        documentDigitalSignature:
+          type: string
+        sha2:
+          type: string
+        digitalSignatureGraphicalCode:
+          type: string
+          nullable: true
+        orderID:
+          type: string
+        uniqueCashRegisterID:
+          type: string
+        marketingContent:
+          type: array
+          items:
+            type: string
+          description: ''
+        QRCode:
+          type: string
+    TaxpayerAddress:
+      title: TaxpayerAddress
+      required:
+      - street
+      - number
+      - apartment
+      - postalCode
+      - postCity
+      - city
+      - regionOrState
+      - country
+      - contactLine1
+      - contactLine2
+      type: object
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+        apartment:
+          type: string
+        postalCode:
+          type: string
+        postCity:
+          type: string
+        city:
+          type: string
+        regionOrState:
+          type: string
+        country:
+          type: string
+        contactLine1:
+          type: string
+        contactLine2:
+          type: string
+    Location:
+      title: Location
+      required:
+      - locationName
+      - locationID
+      - street
+      - number
+      - apartment
+      - postalCode
+      - postCity
+      - city
+      - regionOrState
+      - country
+      - contactLine1
+      - contactLine2
+      type: object
+      properties:
+        locationName:
+          type: string
+        locationID:
+          type: string
+        street:
+          type: string
+        number:
+          type: string
+        apartment:
+          type: string
+        postalCode:
+          type: string
+        postCity:
+          type: string
+        city:
+          type: string
+        regionOrState:
+          type: string
+        country:
+          type: string
+        contactLine1:
+          type: string
+        contactLine2:
+          type: string
+    TaxRates:
+      title: TaxRates
+      required:
+      - A
+      - B
+      - C
+      - D5
+      - E
+      - F
+      - G
+      type: object
+      properties:
+        A:
+          type: integer
+          format: int32
+        B:
+          type: integer
+          format: int32
+        C:
+          type: integer
+          format: int32
+        D5:
+          type: integer
+          format: int32
+        E:
+          type: string
+          nullable: true
+        F:
+          type: string
+          nullable: true
+        G:
+          type: string
+    Line:
+      title: Line
+      required:
+      - productOrServiceName
+      - EAN
+      - ID
+      - quantity
+      - unitOfMeasure
+      - unitPrice
+      - totalLineValue
+      - taxRate
+      - additionalDescription
+      - subtotal
+      - isStorno
+      type: object
+      properties:
+        productOrServiceName:
+          type: string
+          example: Long-sleeve red t-shirt 123
+        EAN:
+          type: string
+          example: 05902560100679
+        ID:
+          type: string
+          example: 123456789
+        quantity:
+          type: integer
+          format: int32
+          example: 1
+        unitOfMeasure:
+          type: string
+          example: pcs.
+        unitPrice:
+          type: number
+          example: 49
+        totalLineValue:
+          type: number
+          example: 49
+        taxRate:
+          type: string
+          example: A
+        rebatesMarkups:
+          type: array
+          items:
+            $ref: '#/components/schemas/RebatesMarkup'
+          description: ''
+        additionalDescription:
+          type: string
+          nullable: true
+        subtotal:
+          type: string
+          nullable: true
+        isStorno:
+          type: string
+          nullable: true
+        discountsMarkups:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscountsMarkup'
+          description: ''
+    RebatesMarkup:
+      title: RebatesMarkup
+      required:
+      - type
+      - value
+      - name
+      - taxRate
+      type: object
+      properties:
+        type:
+          type: string
+          example: markup
+        value:
+          type: integer
+          format: int32
+          example: 1
+        name:
+          type: string
+          example: Red color surcharge
+        taxRate:
+          type: string
+          example: A
+      example:
+        type: markup
+        value: 1
+        name: Red color surcharge
+        taxRate: A
+    DiscountsMarkup:
+      title: DiscountsMarkup
+      required:
+      - type
+      - value
+      - name
+      - taxRate
+      type: object
+      properties:
+        type:
+          type: string
+          example: discount
+        value:
+          type: integer
+          format: int32
+          example: 10
+        name:
+          type: string
+          example: Second red product - minus 10 PLN
+        taxRate:
+          type: string
+          example: A
+      example:
+        type: discount
+        value: 10
+        name: Second red product - minus 10 PLN
+        taxRate: A
+    SettlementAdvancePayment:
+      title: SettlementAdvancePayment
+      required:
+      - nameOfPayment
+      - storno
+      - value
+      - taxRate
+      - requiredAdditionalPayment
+      type: object
+      properties:
+        nameOfPayment:
+          type: string
+          example: Pre-sale payment
+        storno:
+          type: string
+          nullable: true
+        value:
+          type: number
+          example: 10
+        taxRate:
+          type: string
+          example: A
+        requiredAdditionalPayment:
+          type: number
+          example: 100
+    PackageReturn:
+      title: PackageReturn
+      required:
+      - productOrServiceName
+      - EAN
+      - ID
+      - quantity
+      - price
+      type: object
+      properties:
+        productOrServiceName:
+          type: string
+          example: bottle 123
+        EAN:
+          type: string
+          example: 05902560100679
+        ID:
+          type: string
+          example: 123456789
+        quantity:
+          type: integer
+          format: int32
+          example: 2
+        price:
+          type: number
+          example: 0.5
+    ReturnPackagesIssued:
+      title: ReturnPackagesIssued
+      required:
+      - productOrServiceName
+      - EAN
+      - ID
+      - quantity
+      - price
+      type: object
+      properties:
+        productOrServiceName:
+          type: string
+          example: bottle 123
+        EAN:
+          type: string
+          example: 05902560100679
+        ID:
+          type: string
+          example: 123456789
+        quantity:
+          type: integer
+          format: int32
+          example: 2
+        price:
+          type: number
+          example: 0.5
+    CurrencyExchange:
+      title: CurrencyExchange
+      required:
+      - currency
+      - exchangeRate
+      - afterConversion
+      type: object
+      properties:
+        currency:
+          type: string
+        exchangeRate:
+          type: string
+        afterConversion:
+          type: number
+    Payment:
+      title: Payment
+      required:
+      - payments
+      - totalPaid
+      - change
+      type: object
+      properties:
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment1'
+          description: ''
+        totalPaid:
+          type: number
+        change:
+          type: number
+    Payment1:
+      title: Payment1
+      required:
+      - paymentForm
+      - paymentName
+      - giftCardNo
+      - loyaltyCardNo
+      - currency
+      - exchangeRate
+      - cashInOriginalValue
+      type: object
+      properties:
+        paymentForm:
+          type: string
+          example: Mobile App
+        paymentName:
+          type: string
+          example: Platforma Detalistów
+        giftCardNo:
+          type: string
+          example: string
+        loyaltyCardNo:
+          type: string
+          example: string
+        currency:
+          type: string
+          example: PLN
+        exchangeRate:
+          type: number
+          example: 4.3209999999999997
+        cashInOriginalValue:
+          type: integer
+          format: int32
+          example: 25
+    PobraniedanychdoeParagonu:
+      title: PobraniedanychdoeParagonu
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+      example:
+        status: OK
+tags:
+- name: Authorization
+  description: Autoryzacja pomiędzy system centralnym Platformy Detalistów z systemem kasowym detalistów oparta o OAuth 2.0 w trybie Client Credentials.
+- name: POS API
+  description: Usługi udostępniane przez system kasowy
+- name: PD API
+  description: Usługi udostępnione przez Platformę Detalistów

@@ -1,0 +1,8 @@
+specFileName: ./OpenApi3Yaml.yaml
+apiTitle: PD API Documentation
+splitSpec: true
+codeSamples: true
+swaggerUI: false
+travis: true
+repo: 'https://github.com/TomekKazmierczak/spark-doc.git'
+oasVersion: 3.0.0

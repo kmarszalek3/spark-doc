@@ -1,0 +1,13 @@
+title: Identyfikacjaklientawpunkciesprzedazy/obslugi
+required:
+  - clientLoyaltyId
+  - clientLoyaltyStatus
+type: object
+properties:
+  clientLoyaltyId:
+    type: string
+  clientLoyaltyStatus:
+    type: string
+example:
+  clientLoyaltyId: 987
+  clientLoyaltyStatus: ok

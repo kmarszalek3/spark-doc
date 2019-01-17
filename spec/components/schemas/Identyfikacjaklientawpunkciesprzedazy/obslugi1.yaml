@@ -1,0 +1,17 @@
+title: Identyfikacjaklientawpunkciesprzedazy/obslugi1
+required:
+  - clientId
+  - isAppPaymentAvailable
+  - clientLoyaltyId
+type: object
+properties:
+  clientId:
+    type: string
+  isAppPaymentAvailable:
+    type: string
+  clientLoyaltyId:
+    type: string
+example:
+  clientId: 1234
+  isAppPaymentAvailable: true
+  clientLoyaltyId: 987

@@ -1,0 +1,40 @@
+title: EReceipt
+required:
+  - metadata
+  - lines
+  - settlementAdvancePayment
+  - packageReturns
+  - returnPackagesIssued
+  - totalPackagesValue
+  - currencyExchange
+  - payment
+type: object
+properties:
+  metadata:
+    $ref: '#/components/schemas/Metadata'
+  lines:
+    type: array
+    items:
+      $ref: '#/components/schemas/Line'
+    description: ''
+  settlementAdvancePayment:
+    type: array
+    items:
+      $ref: '#/components/schemas/SettlementAdvancePayment'
+    description: ''
+  packageReturns:
+    type: array
+    items:
+      $ref: '#/components/schemas/PackageReturn'
+    description: ''
+  returnPackagesIssued:
+    type: array
+    items:
+      $ref: '#/components/schemas/ReturnPackagesIssued'
+    description: ''
+  totalPackagesValue:
+    type: number
+  currencyExchange:
+    $ref: '#/components/schemas/CurrencyExchange'
+  payment:
+    $ref: '#/components/schemas/Payment'

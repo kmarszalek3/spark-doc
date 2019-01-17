@@ -1,0 +1,19 @@
+title: CreateeReceiptRequest
+required:
+  - posId
+  - clientId
+  - transactionId
+  - datetime
+  - eReceipt
+type: object
+properties:
+  posId:
+    type: string
+  clientId:
+    type: string
+  transactionId:
+    type: string
+  datetime:
+    type: string
+  eReceipt:
+    $ref: '#/components/schemas/EReceipt'

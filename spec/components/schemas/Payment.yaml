@@ -1,0 +1,16 @@
+title: Payment
+required:
+  - payments
+  - totalPaid
+  - change
+type: object
+properties:
+  payments:
+    type: array
+    items:
+      $ref: '#/components/schemas/Payment1'
+    description: ''
+  totalPaid:
+    type: number
+  change:
+    type: number

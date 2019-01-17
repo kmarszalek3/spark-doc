@@ -1,0 +1,25 @@
+title: PackageReturn
+required:
+  - productOrServiceName
+  - EAN
+  - ID
+  - quantity
+  - price
+type: object
+properties:
+  productOrServiceName:
+    type: string
+    example: bottle 123
+  EAN:
+    type: string
+    example: 05902560100679
+  ID:
+    type: string
+    example: 123456789
+  quantity:
+    type: integer
+    format: int32
+    example: 2
+  price:
+    type: number
+    example: 0.5

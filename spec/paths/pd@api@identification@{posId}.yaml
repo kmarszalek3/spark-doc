@@ -1,0 +1,49 @@
+post:
+  tags:
+    - PD API
+  summary: Customer Identification
+  description: >-
+    *Wariant pasywny. System kasowy tylko pobiera informacje.*
+
+
+    <p>Celem jest udostępnienie informacji identyfikacyjnych klienta
+    („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji
+    będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).</p>
+  operationId: CustomerIdentification1
+  parameters:
+    - name: posId
+      in: path
+      description: identyfikator kasy
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 5678
+    - name: Content-Type
+      in: header
+      description: ''
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: application/json
+  responses:
+    '200':
+      description: ''
+      headers: {}
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              #/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi1
+          example:
+            clientId: 1234
+            isAppPaymentAvailable: true
+            clientLoyaltyId: 987
+  x-operation-settings:
+    CollectParameters: false
+    AllowDynamicQueryParameters: false
+    AllowDynamicFormParameters: false
+    IsMultiContentStreaming: false

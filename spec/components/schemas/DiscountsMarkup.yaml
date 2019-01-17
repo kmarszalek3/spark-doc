@@ -1,0 +1,26 @@
+title: DiscountsMarkup
+required:
+  - type
+  - value
+  - name
+  - taxRate
+type: object
+properties:
+  type:
+    type: string
+    example: discount
+  value:
+    type: integer
+    format: int32
+    example: 10
+  name:
+    type: string
+    example: Second red product - minus 10 PLN
+  taxRate:
+    type: string
+    example: A
+example:
+  type: discount
+  value: 10
+  name: Second red product - minus 10 PLN
+  taxRate: A

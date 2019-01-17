@@ -1,0 +1,40 @@
+title: Location
+required:
+  - locationName
+  - locationID
+  - street
+  - number
+  - apartment
+  - postalCode
+  - postCity
+  - city
+  - regionOrState
+  - country
+  - contactLine1
+  - contactLine2
+type: object
+properties:
+  locationName:
+    type: string
+  locationID:
+    type: string
+  street:
+    type: string
+  number:
+    type: string
+  apartment:
+    type: string
+  postalCode:
+    type: string
+  postCity:
+    type: string
+  city:
+    type: string
+  regionOrState:
+    type: string
+  country:
+    type: string
+  contactLine1:
+    type: string
+  contactLine2:
+    type: string

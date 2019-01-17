@@ -1,0 +1,54 @@
+put:
+  tags:
+    - POS API
+  summary: Customer Identification
+  description: >-
+    Celem jest przekazanie kasie informacji identyfikacyjnych klienta
+    („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji
+    będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).
+  operationId: CustomerIdentification
+  parameters:
+    - name: posId
+      in: path
+      description: identyfikator kasy
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: 5678
+    - name: Content-Type
+      in: header
+      description: ''
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        example: application/json
+  requestBody:
+    description: ''
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CustomerIdentificationRequest'
+        example: >-
+          {"clientId":"1234","isAppPaymentAvailable":"true","clientLoyaltyId":"987"}
+    required: true
+  responses:
+    '200':
+      description: ''
+      headers: {}
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              #/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi
+          example:
+            clientLoyaltyId: 987
+            clientLoyaltyStatus: ok
+  x-operation-settings:
+    CollectParameters: false
+    AllowDynamicQueryParameters: false
+    AllowDynamicFormParameters: false
+    IsMultiContentStreaming: false
