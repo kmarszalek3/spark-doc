@@ -69,18 +69,14 @@ paths:
                 $ref: '#/components/schemas/Pobraniekodudostepu'
               example:
                 accessToken: bnM0ZlFjMTRaZzRoS0ZDTmFTekFyVnV3c3pYOTVYOlpJakZ5VHNOZ1FOeXhJOg==
-      x-operation-settings:
-        CollectParameters: false
-        AllowDynamicQueryParameters: false
-        AllowDynamicFormParameters: false
-        IsMultiContentStreaming: false
+      deprecated: false
   /pos/api/identification/{posId}:
     put:
       tags:
       - POS API
-      summary: Customer Identification
+      summary: Customer Identification (deprecated)
       description: Celem jest przekazanie kasie informacji identyfikacyjnych klienta („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).
-      operationId: CustomerIdentification
+      operationId: CustomerIdentification(deprecated)
       parameters:
       - name: posId
         in: path
@@ -105,7 +101,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CustomerIdentificationRequest'
+              $ref: '#/components/schemas/CustomerIdentification(deprecated)Request'
             example: '{"clientId":"1234","isAppPaymentAvailable":"true","clientLoyaltyId":"987"}'
         required: true
       responses:
@@ -119,12 +115,8 @@ paths:
               example:
                 clientLoyaltyId: 987
                 clientLoyaltyStatus: ok
-      x-operation-settings:
-        CollectParameters: false
-        AllowDynamicQueryParameters: false
-        AllowDynamicFormParameters: false
-        IsMultiContentStreaming: false
-  /pos/api/payments/{posId}/{clientId}:
+      deprecated: false
+  /pos/api/payments/{posId}:
     post:
       tags:
       - POS API
@@ -141,15 +133,6 @@ paths:
         schema:
           type: string
           example: 5678
-      - name: clientId
-        in: path
-        description: identyfikator klienta
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          example: 1234
       - name: Content-Type
         in: header
         description: ''
@@ -225,22 +208,18 @@ paths:
                 $ref: '#/components/schemas/Success'
               example:
                 status: OK
-      x-operation-settings:
-        CollectParameters: false
-        AllowDynamicQueryParameters: false
-        AllowDynamicFormParameters: false
-        IsMultiContentStreaming: false
+      deprecated: false
   /pd/api/identification/{posId}:
     post:
       tags:
       - PD API
-      summary: Customer Identification
+      summary: Customer Identification (deprecated)
       description: >-
         *Wariant pasywny. System kasowy tylko pobiera informacje.*
 
 
         <p>Celem jest udostępnienie informacji identyfikacyjnych klienta („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).</p>
-      operationId: CustomerIdentification1
+      operationId: CustomerIdentification(deprecated)1
       parameters:
       - name: posId
         in: path
@@ -270,18 +249,13 @@ paths:
                 $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi1'
               example:
                 clientId: 1234
-                isAppPaymentAvailable: true
                 clientLoyaltyId: 987
-      x-operation-settings:
-        CollectParameters: false
-        AllowDynamicQueryParameters: false
-        AllowDynamicFormParameters: false
-        IsMultiContentStreaming: false
-  /pd/api/prereceipt/{posId}/{clientId}:
+      deprecated: false
+  /pd/api/preReceipt/{posId}:
     post:
       tags:
       - PD API
-      summary: Create PreReceipt
+      summary: Create preReceipt
       description: >-
         Celem jest otrzymanie informacji o transakcji, wyświetlenie ich konsumentowi w formie pre-paragonu do przeprowadzenia płatności (jeśli płatność odbywa się poprzez aplikację mobilną konsumenta).
 
@@ -298,15 +272,6 @@ paths:
         schema:
           type: string
           example: 5678
-      - name: clientId
-        in: path
-        description: identyfikator klienta
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          example: 1234
       - name: Content-Type
         in: header
         description: ''
@@ -321,8 +286,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatePreReceiptRequest'
-            example: '{"posId":"pos5678","clientId":"client1234","transactionId":"transaction43543","datetime":"1235323434","amount":7197,"products":[{"id":"0","name":"ProductA","amount":1,"price":599},{"id":"1","name":"ProductB","amount":1,"price":3699},{"id":"2","name":"ProductC","amount":1,"price":2899}]}'
+              $ref: '#/components/schemas/CreatepreReceiptRequest'
+            example: '{"POStransactionId":"transaction43543","datetime":"1235323434","amount":7197,"products":[{"id":"0","name":"ProductA","amount":1,"price":599},{"id":"1","name":"ProductB","amount":1,"price":3699},{"id":"2","name":"ProductC","amount":1,"price":2899}]}'
         required: true
       responses:
         200:
@@ -331,15 +296,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pobraniedanychdotransakcjipre-paragon'
+                $ref: '#/components/schemas/Pobraniedanychdotransakcjipre-receipt'
               example:
                 status: OK
-      x-operation-settings:
-        CollectParameters: false
-        AllowDynamicQueryParameters: false
-        AllowDynamicFormParameters: false
-        IsMultiContentStreaming: false
-  /pd/api/payments/{posId}/{clientId}:
+                clientId: 512321323
+                transactionId: 34234
+      deprecated: false
+  /pd/api/payments/{posId}:
     post:
       tags:
       - PD API
@@ -359,15 +322,6 @@ paths:
         schema:
           type: string
           example: 5678
-      - name: clientId
-        in: path
-        description: identyfikator klienta
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          example: 1234
       - name: Content-Type
         in: header
         description: ''
@@ -442,13 +396,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Success'
               example:
-                status: success
-      x-operation-settings:
-        CollectParameters: false
-        AllowDynamicQueryParameters: false
-        AllowDynamicFormParameters: false
-        IsMultiContentStreaming: false
-  /pd/api/ereceipt/{posId}/{clientId}:
+                status: OK
+      deprecated: false
+  /pd/api/ereceipt/{posId}:
     post:
       tags:
       - PD API
@@ -679,15 +629,6 @@ paths:
         schema:
           type: string
           example: 5678
-      - name: clientId
-        in: path
-        description: identyfikator klienta
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          example: 1234
       requestBody:
         description: ''
         content:
@@ -705,11 +646,7 @@ paths:
                 $ref: '#/components/schemas/PobraniedanychdoeParagonu'
               example:
                 status: OK
-      x-operation-settings:
-        CollectParameters: false
-        AllowDynamicQueryParameters: false
-        AllowDynamicFormParameters: false
-        IsMultiContentStreaming: false
+      deprecated: false
 components:
   schemas:
     Pobraniekodudostepu:
@@ -722,8 +659,8 @@ components:
           type: string
       example:
         accessToken: bnM0ZlFjMTRaZzRoS0ZDTmFTekFyVnV3c3pYOTVYOlpJakZ5VHNOZ1FOeXhJOg==
-    CustomerIdentificationRequest:
-      title: CustomerIdentificationRequest
+    CustomerIdentification(deprecated)Request:
+      title: CustomerIdentification(deprecated)Request
       required:
       - clientId
       - isAppPaymentAvailable
@@ -782,36 +719,26 @@ components:
       title: Identyfikacjaklientawpunkciesprzedazy/obslugi1
       required:
       - clientId
-      - isAppPaymentAvailable
       - clientLoyaltyId
       type: object
       properties:
         clientId:
           type: string
-        isAppPaymentAvailable:
-          type: string
         clientLoyaltyId:
           type: string
       example:
         clientId: 1234
-        isAppPaymentAvailable: true
         clientLoyaltyId: 987
-    CreatePreReceiptRequest:
-      title: CreatePreReceiptRequest
+    CreatepreReceiptRequest:
+      title: CreatepreReceiptRequest
       required:
-      - posId
-      - clientId
-      - transactionId
+      - POStransactionId
       - datetime
       - amount
       - products
       type: object
       properties:
-        posId:
-          type: string
-        clientId:
-          type: string
-        transactionId:
+        POStransactionId:
           type: string
         datetime:
           type: string
@@ -824,9 +751,7 @@ components:
             $ref: '#/components/schemas/Product'
           description: ''
       example:
-        posId: pos5678
-        clientId: client1234
-        transactionId: transaction43543
+        POStransactionId: transaction43543
         datetime: 1235323434
         amount: 7197
         products:
@@ -865,16 +790,24 @@ components:
           type: integer
           format: int32
           example: 599
-    Pobraniedanychdotransakcjipre-paragon:
-      title: Pobraniedanychdotransakcjipre-paragon
+    Pobraniedanychdotransakcjipre-receipt:
+      title: Pobraniedanychdotransakcjipre-receipt
       required:
       - status
+      - clientId
+      - transactionId
       type: object
       properties:
         status:
           type: string
+        clientId:
+          type: string
+        transactionId:
+          type: string
       example:
         status: OK
+        clientId: 512321323
+        transactionId: 34234
     CheckPaymentStatusPASSIVERequest:
       title: CheckPaymentStatusPASSIVERequest
       required:
@@ -888,17 +821,11 @@ components:
     CreateeReceiptRequest:
       title: CreateeReceiptRequest
       required:
-      - posId
-      - clientId
       - transactionId
       - datetime
       - eReceipt
       type: object
       properties:
-        posId:
-          type: string
-        clientId:
-          type: string
         transactionId:
           type: string
         datetime:
@@ -958,7 +885,6 @@ components:
       - nextDocumentID
       - currency
       - markupsTotal
-      - rebatesTotal
       - taxRates
       - subtotalsByTaxRate
       - taxValue
@@ -978,7 +904,6 @@ components:
       - endTimeTimeZone
       - documentDigitalSignature
       - sha2
-      - digitalSignatureGraphicalCode
       - orderID
       - uniqueCashRegisterID
       - marketingContent
@@ -1154,8 +1079,6 @@ components:
       - B
       - C
       - D5
-      - E
-      - F
       - G
       type: object
       properties:
@@ -1190,9 +1113,6 @@ components:
       - unitPrice
       - totalLineValue
       - taxRate
-      - additionalDescription
-      - subtotal
-      - isStorno
       type: object
       properties:
         productOrServiceName:
@@ -1297,7 +1217,6 @@ components:
       title: SettlementAdvancePayment
       required:
       - nameOfPayment
-      - storno
       - value
       - taxRate
       - requiredAdditionalPayment
