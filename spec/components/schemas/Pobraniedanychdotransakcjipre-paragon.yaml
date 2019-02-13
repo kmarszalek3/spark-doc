@@ -1,9 +1,0 @@
-title: Pobraniedanychdotransakcjipre-paragon
-required:
-  - status
-type: object
-properties:
-  status:
-    type: string
-example:
-  status: OK

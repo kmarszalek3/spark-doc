@@ -1,9 +1,0 @@
-title: Success
-required:
-  - status
-type: object
-properties:
-  status:
-    type: string
-example:
-  status: OK

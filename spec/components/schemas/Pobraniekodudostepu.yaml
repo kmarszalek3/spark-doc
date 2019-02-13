@@ -1,9 +1,0 @@
-title: Pobraniekodudostepu
-required:
-  - accessToken
-type: object
-properties:
-  accessToken:
-    type: string
-example:
-  accessToken: bnM0ZlFjMTRaZzRoS0ZDTmFTekFyVnV3c3pYOTVYOlpJakZ5VHNOZ1FOeXhJOg==
