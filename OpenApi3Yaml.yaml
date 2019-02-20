@@ -71,12 +71,12 @@ paths:
                 accessToken: bnM0ZlFjMTRaZzRoS0ZDTmFTekFyVnV3c3pYOTVYOlpJakZ5VHNOZ1FOeXhJOg==
       deprecated: false
   /pos/api/identification/{posId}:
-    put:
+    post:
       tags:
       - POS API
-      summary: Customer Identification (deprecated)
+      summary: Customer Identification
       description: Celem jest przekazanie kasie informacji identyfikacyjnych klienta („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).
-      operationId: CustomerIdentification(deprecated)
+      operationId: CustomerIdentification
       parameters:
       - name: posId
         in: path
@@ -101,8 +101,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CustomerIdentification(deprecated)Request'
-            example: '{"clientId":"1234","isAppPaymentAvailable":"true","clientLoyaltyId":"987"}'
+              $ref: '#/components/schemas/CustomerIdentificationRequest'
+            example: '{"transactionId":"3571169090","isAppPaymentAvailable":true,"identificationTime":1550695411,"currentTime":1550695433}'
         required: true
       responses:
         200:
@@ -113,8 +113,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi'
               example:
-                clientLoyaltyId: 987
-                clientLoyaltyStatus: ok
+                status: OK_PDpayment
       deprecated: false
   /pos/api/payments/{posId}:
     post:
@@ -148,7 +147,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CheckPaymentStatusRequest'
-            example: '{"transactionId":"transaction54353","status":"success"}'
+            example: '{"transactionId":"1029703084","paymentStatus":"success"}'
         required: true
       responses:
         200:
@@ -213,13 +212,13 @@ paths:
     post:
       tags:
       - PD API
-      summary: Customer Identification (deprecated)
+      summary: Customer Identification (passive)
       description: >-
         *Wariant pasywny. System kasowy tylko pobiera informacje.*
 
 
         <p>Celem jest udostępnienie informacji identyfikacyjnych klienta („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).</p>
-      operationId: CustomerIdentification(deprecated)1
+      operationId: CustomerIdentification(passive)
       parameters:
       - name: posId
         in: path
@@ -239,6 +238,14 @@ paths:
         schema:
           type: string
           example: application/json
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerIdentification(passive)Request'
+            example: '{"isTransactionId":"5097107791","sessionStartTime":1550696743,"currentTime":1550696757}'
+        required: true
       responses:
         200:
           description: ''
@@ -248,20 +255,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi1'
               example:
-                clientId: 1234
-                clientLoyaltyId: 987
+                transactionId: 1860196369
+                isAppPaymentAvailable: true
       deprecated: false
-  /pd/api/preReceipt/{posId}:
+  /pd/api/shoppingCart/{posId}:
     post:
       tags:
       - PD API
-      summary: Create preReceipt
+      summary: Create shoppingCart
       description: >-
         Celem jest otrzymanie informacji o transakcji, wyświetlenie ich konsumentowi w formie pre-paragonu do przeprowadzenia płatności (jeśli płatność odbywa się poprzez aplikację mobilną konsumenta).
 
 
         Transfer informacji na trigger z kasy (zamknij paragon lub płatność aplikacją).
-      operationId: CreatePrereceipt
+      operationId: CreateShoppingcart
       parameters:
       - name: posId
         in: path
@@ -286,8 +293,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatepreReceiptRequest'
-            example: '{"POStransactionId":"transaction43543","datetime":"1235323434","amount":7197,"products":[{"id":"0","name":"ProductA","amount":1,"price":599},{"id":"1","name":"ProductB","amount":1,"price":3699},{"id":"2","name":"ProductC","amount":1,"price":2899}]}'
+              $ref: '#/components/schemas/CreateshoppingCartRequest'
+            example: '{"transactionId":"transaction11234","POStransactionId":"transaction43543","datetime":"1235323434","paymentAmount":7197,"products":[{"id":"0","name":"ProductA","amount":1,"price":599},{"id":"1","name":"ProductB","amount":1,"price":3699},{"id":"2","name":"ProductC","amount":1,"price":2899}]}'
         required: true
       responses:
         200:
@@ -296,22 +303,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pobraniedanychdotransakcjipre-receipt'
+                $ref: '#/components/schemas/PobraniedanychdotransakcjishoppingCart'
               example:
                 status: OK
-                clientId: 512321323
-                transactionId: 34234
       deprecated: false
   /pd/api/payments/{posId}:
     post:
       tags:
       - PD API
-      summary: Check Payment Status PASSIVE
+      summary: Check Payment Status (passive)
       description: >-
         *Wariant pasywny. System kasowy tylko pobiera informacje.*
 
         <p>Celem jest pobranie informacji o statusie wykonanej płatności.</p>
-      operationId: CheckPaymentStatusPassive
+      operationId: CheckPaymentStatus(passive)
       parameters:
       - name: posId
         in: path
@@ -336,8 +341,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CheckPaymentStatusPASSIVERequest'
-            example: '{"transactionId":"transaction54353"}'
+              $ref: '#/components/schemas/CheckPaymentStatus(passive)Request'
+            example: '{"transactionId":"3395859457"}'
         required: true
       responses:
         200:
@@ -396,7 +401,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Success'
               example:
-                status: OK
+                status: success
       deprecated: false
   /pd/api/ereceipt/{posId}:
     post:
@@ -659,52 +664,54 @@ components:
           type: string
       example:
         accessToken: bnM0ZlFjMTRaZzRoS0ZDTmFTekFyVnV3c3pYOTVYOlpJakZ5VHNOZ1FOeXhJOg==
-    CustomerIdentification(deprecated)Request:
-      title: CustomerIdentification(deprecated)Request
-      required:
-      - clientId
-      - isAppPaymentAvailable
-      - clientLoyaltyId
-      type: object
-      properties:
-        clientId:
-          type: string
-        isAppPaymentAvailable:
-          type: string
-        clientLoyaltyId:
-          type: string
-      example:
-        clientId: 1234
-        isAppPaymentAvailable: true
-        clientLoyaltyId: 987
-    Identyfikacjaklientawpunkciesprzedazy/obslugi:
-      title: Identyfikacjaklientawpunkciesprzedazy/obslugi
-      required:
-      - clientLoyaltyId
-      - clientLoyaltyStatus
-      type: object
-      properties:
-        clientLoyaltyId:
-          type: string
-        clientLoyaltyStatus:
-          type: string
-      example:
-        clientLoyaltyId: 987
-        clientLoyaltyStatus: ok
-    CheckPaymentStatusRequest:
-      title: CheckPaymentStatusRequest
+    CustomerIdentificationRequest:
+      title: CustomerIdentificationRequest
       required:
       - transactionId
-      - status
+      - isAppPaymentAvailable
+      - identificationTime
+      - currentTime
       type: object
       properties:
         transactionId:
           type: string
+        isAppPaymentAvailable:
+          type: boolean
+        identificationTime:
+          type: integer
+          format: int32
+        currentTime:
+          type: integer
+          format: int32
+      example:
+        transactionId: 3571169090
+        isAppPaymentAvailable: true
+        identificationTime: 1550695411
+        currentTime: 1550695433
+    Identyfikacjaklientawpunkciesprzedazy/obslugi:
+      title: Identyfikacjaklientawpunkciesprzedazy/obslugi
+      required:
+      - status
+      type: object
+      properties:
         status:
           type: string
       example:
-        transactionId: transaction54353
-        status: success
+        status: OK_PDpayment
+    CheckPaymentStatusRequest:
+      title: CheckPaymentStatusRequest
+      required:
+      - transactionId
+      - paymentStatus
+      type: object
+      properties:
+        transactionId:
+          type: string
+        paymentStatus:
+          type: string
+      example:
+        transactionId: 1029703084
+        paymentStatus: success
     Success:
       title: Success
       required:
@@ -715,34 +722,58 @@ components:
           type: string
       example:
         status: OK
+    CustomerIdentification(passive)Request:
+      title: CustomerIdentification(passive)Request
+      required:
+      - isTransactionId
+      - sessionStartTime
+      - currentTime
+      type: object
+      properties:
+        isTransactionId:
+          type: string
+        sessionStartTime:
+          type: integer
+          format: int32
+        currentTime:
+          type: integer
+          format: int32
+      example:
+        isTransactionId: 5097107791
+        sessionStartTime: 1550696743
+        currentTime: 1550696757
     Identyfikacjaklientawpunkciesprzedazy/obslugi1:
       title: Identyfikacjaklientawpunkciesprzedazy/obslugi1
       required:
-      - clientId
-      - clientLoyaltyId
+      - transactionId
+      - isAppPaymentAvailable
       type: object
       properties:
-        clientId:
-          type: string
-        clientLoyaltyId:
-          type: string
+        transactionId:
+          type: integer
+          format: int32
+        isAppPaymentAvailable:
+          type: boolean
       example:
-        clientId: 1234
-        clientLoyaltyId: 987
-    CreatepreReceiptRequest:
-      title: CreatepreReceiptRequest
+        transactionId: 1860196369
+        isAppPaymentAvailable: true
+    CreateshoppingCartRequest:
+      title: CreateshoppingCartRequest
       required:
+      - transactionId
       - POStransactionId
       - datetime
-      - amount
+      - paymentAmount
       - products
       type: object
       properties:
+        transactionId:
+          type: string
         POStransactionId:
           type: string
         datetime:
           type: string
-        amount:
+        paymentAmount:
           type: integer
           format: int32
         products:
@@ -751,9 +782,10 @@ components:
             $ref: '#/components/schemas/Product'
           description: ''
       example:
+        transactionId: transaction11234
         POStransactionId: transaction43543
         datetime: 1235323434
-        amount: 7197
+        paymentAmount: 7197
         products:
         - id: 0
           name: ProductA
@@ -790,26 +822,18 @@ components:
           type: integer
           format: int32
           example: 599
-    Pobraniedanychdotransakcjipre-receipt:
-      title: Pobraniedanychdotransakcjipre-receipt
+    PobraniedanychdotransakcjishoppingCart:
+      title: PobraniedanychdotransakcjishoppingCart
       required:
       - status
-      - clientId
-      - transactionId
       type: object
       properties:
         status:
           type: string
-        clientId:
-          type: string
-        transactionId:
-          type: string
       example:
         status: OK
-        clientId: 512321323
-        transactionId: 34234
-    CheckPaymentStatusPASSIVERequest:
-      title: CheckPaymentStatusPASSIVERequest
+    CheckPaymentStatus(passive)Request:
+      title: CheckPaymentStatus(passive)Request
       required:
       - transactionId
       type: object
@@ -817,7 +841,7 @@ components:
         transactionId:
           type: string
       example:
-        transactionId: transaction54353
+        transactionId: 3395859457
     CreateeReceiptRequest:
       title: CreateeReceiptRequest
       required:
