@@ -124,6 +124,8 @@ paths:
                 $ref: '#/components/schemas/OK_nonPDpayment=IdentificationTime>SessionStartTime^PaymentStatus=nonPDInProgress'
               example:
                 status: RejectIdentification_paid
+              example:
+                status: RejectIdentification_time
       deprecated: false
   /pos/api/payments/{posId}:
     post:
