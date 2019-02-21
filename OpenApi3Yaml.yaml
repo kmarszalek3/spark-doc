@@ -14,7 +14,7 @@ paths:
       tags:
       - Authorization
       summary: Obtain authorization code
-      description: 'Jeśli kod będzie nieprawidłowy wywołania do API będą się kończyły błędem 403 - not authorized.'
+      description: Jeśli kod będzie nieprawidłowy wywołania do API będą się kończyły błędem 403 - not authorized.
       operationId: ObtainAuthorizationCode
       parameters:
       - name: grant_type
@@ -113,9 +113,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi'
+                $ref: '#/components/schemas/OK_nonPDpayment=IdentificationTime>SessionStartTime^PaymentStatus=nonPDInProgress'
               example:
-                status: OK_PDpayment
+                status: OK_nonPDpayment
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK_nonPDpayment=IdentificationTime>SessionStartTime^PaymentStatus=nonPDInProgress'
+              example:
+                status: RejectIdentification_paid
       deprecated: false
   /pos/api/payments/{posId}:
     post:
@@ -255,7 +263,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi1'
+                $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi'
               example:
                 transactionId: 1860196369
                 isAppPaymentAvailable: true
@@ -690,8 +698,8 @@ components:
         isAppPaymentAvailable: true
         identificationTime: 1550695411
         currentTime: 1550695433
-    Identyfikacjaklientawpunkciesprzedazy/obslugi:
-      title: Identyfikacjaklientawpunkciesprzedazy/obslugi
+    OK_nonPDpayment=IdentificationTime>SessionStartTime^PaymentStatus=nonPDInProgress:
+      title: OK_nonPDpayment=IdentificationTime>SessionStartTime^PaymentStatus=nonPDInProgress
       required:
       - status
       type: object
@@ -699,7 +707,7 @@ components:
         status:
           type: string
       example:
-        status: OK_PDpayment
+        status: OK_nonPDpayment
     CheckPaymentStatusRequest:
       title: CheckPaymentStatusRequest
       required:
@@ -744,8 +752,8 @@ components:
         isTransactionId: 5097107791
         sessionStartTime: 1550696743
         currentTime: 1550696757
-    Identyfikacjaklientawpunkciesprzedazy/obslugi1:
-      title: Identyfikacjaklientawpunkciesprzedazy/obslugi1
+    Identyfikacjaklientawpunkciesprzedazy/obslugi:
+      title: Identyfikacjaklientawpunkciesprzedazy/obslugi
       required:
       - transactionId
       - isAppPaymentAvailable
