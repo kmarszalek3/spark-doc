@@ -69,6 +69,8 @@ paths:
                 $ref: '#/components/schemas/Pobraniekodudostepu'
               example:
                 accessToken: bnM0ZlFjMTRaZzRoS0ZDTmFTekFyVnV3c3pYOTVYOlpJakZ5VHNOZ1FOeXhJOg==
+        403:
+          description: Forbidden
       deprecated: false
   /pos/api/identification/{posId}:
     post:
