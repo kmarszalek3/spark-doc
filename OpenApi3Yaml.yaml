@@ -723,9 +723,6 @@ components:
           RejectIdentification_time:
             value:
               status: RejectIdentification_time
-          RejectIdentification_paid:
-            value:
-              status: RejectIdentification_paid
     CheckPaymentStatusRequest:
       title: CheckPaymentStatusRequest
       required:
