@@ -283,9 +283,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Identyfikacjaklientawpunkciesprzedazy~1obslugi'
-              example:
-                transactionId: 1860196369
-                isAppPaymentAvailable: true
+              examples:
+                ex1:
+                  value:
+                    transactionId: 1860196369
+                    isAppPaymentAvailable: true
+                ex2:
+                  value:
+                    status: "NO_TRANSACTION_ID"
       deprecated: false
   /pd/api/shoppingCart/{posId}:
     post:
