@@ -14,7 +14,7 @@ paths:
       tags:
       - Authorization
       summary: Obtain authorization code
-      description: 'TODO: Add Description'
+      description: 'Jeśli kod będzie nieprawidłowy wywołania do API będą się kończyły błędem 403 - not authorized.'
       operationId: ObtainAuthorizationCode
       parameters:
       - name: grant_type
