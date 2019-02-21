@@ -121,9 +121,15 @@ paths:
                 OK_prepayment:
                   value:
                     status: OK_prepayment 
+                OK_PDpayment:  
+                  value:
+                    status: OK_PDpayment  
                 OK_switchpayment1:
                   value:
-                    status: OK_switchpayment1                   
+                    status: OK_switchpayment1  
+                OK_switchpayment2:
+                  value:
+                    status: OK_switchpayment2                                                     
         400:
           description: Bad Request
           content:
