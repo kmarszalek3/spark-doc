@@ -114,8 +114,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OK_nonPDpayment=IdentificationTime>SessionStartTime^PaymentStatus=nonPDInProgress'
-              example:
-                status: OK_nonPDpayment
+              examples:
+                OK_nonPDpayment:
+                  value:
+                    status: OK_nonPDpayment
+                OK_prepayment:
+                  value:
+                    status: OK_nonPDpayment                    
         400:
           description: Bad Request
           content:
