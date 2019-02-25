@@ -77,7 +77,7 @@ paths:
       tags:
       - POS API
       summary: Customer Identification
-      description: Celem jest przekazanie kasie informacji identyfikacyjnych klienta („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).
+      description: Celem jest przekazanie kasie informacji identyfikacyjnych („transactionId”, „identificationTime”, "currentTime") oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).
       operationId: CustomerIdentification
       parameters:
       - name: posId
@@ -246,7 +246,7 @@ paths:
         *Wariant pasywny. System kasowy tylko pobiera informacje.*
 
 
-        <p>Celem jest udostępnienie informacji identyfikacyjnych klienta („clientId”, „clientLoyaltyId”) oraz informacji czy dla danej transakcji będzie realizowany proces płatności aplikacją („isAppPaymentAvailable”).</p>
+        <p>Celem jest przekazanie kasie informacji „isTransactionId”, „sessionStartTime”, "currentTime".</p>
       operationId: CustomerIdentification(passive)
       parameters:
       - name: posId
