@@ -288,6 +288,13 @@ paths:
                   value:
                     transactionId: 1860196369
                     isAppPaymentAvailable: true
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OK_nonPDpayment=IdentificationTime>SessionStartTime^PaymentStatus=nonPDInProgress'
+              examples:
                 beforeClientIdentification:
                   value:
                     status: "NO_TRANSACTION_ID"
