@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: PD API Documentation
   description: >
-    Integracja systemu centralnego Platformy Detalistów z systemami kasowymi detalistów
+    Integracja Systemu Kasowego (POS) z systemem centralnym Platformy Detalistów (PD)
   contact: {}
   version: '1.0'
 servers:
@@ -14,7 +14,7 @@ paths:
       tags:
       - Authorization
       summary: Obtain authorization code
-      description: Jeśli kod będzie nieprawidłowy wywołania do API będą się kończyły błędem 403 - not authorized.
+      description: Jeśli kod będzie prawidłowy wywołania do API będą się kończyły sukcesem 200, jeśli będzie nieprawidłowy będą kończyły sie błędem 403 - not authorized.
       operationId: ObtainAuthorizationCode
       parameters:
       - name: grant_type
